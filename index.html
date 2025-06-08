@@ -17,16 +17,16 @@
           <nav>
             <img src="images/logo.png" class="logo" />
             <ul id="sidemenu">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Portfolio</a></li>
-              <li><a href="#">Contact</a></li>
-              <i class="fa-solid fa-xmark" onclick="closemenu"></i>
+              <li><a href="#header">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#portfolio">Portfolio</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <i class="fa-solid fa-xmark" onclick="closemenu()"></i>
             </ul>
-            <i class="fa-solid fa-bars"></i>
+            <i class="fa-solid fa-bars" onclick="openmenu()"></i>
           </nav>
-          <div class="header-Text" onclick="openmenu">
+          <div class="header-Text">
             <p>Aspiring Front End Developer</p>
             <h1>Hi, I'm <span>Marco Carreira</span> <br />From Cape Town</h1>
           </div>
@@ -215,7 +215,7 @@
           </div>
 
           <div class="contact-right">
-            <form>
+            <form name="submit-to-google-sheet">
               <input type="text" name="Name" placeholder="Your Name" required />
               <input
                 type="email"
@@ -230,6 +230,7 @@
               ></textarea>
               <button type="submit" class="btn btn2">Submit</button>
             </form>
+            <span id="msg"></span>
           </div>
         </div>
       </div>
@@ -238,6 +239,50 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+      var tablinks = document.getElementsByClassName("tab-links");
+      var tabcontents = document.getElementsByClassName("tab-contents");
+      function opentab(clickedElement, tabname) {
+        for (tablink of tablinks) {
+          tablink.classList.remove("active-link");
+        }
+        for (tabcontent of tabcontents) {
+          tabcontent.classList.remove("active-tab");
+        }
+        clickedElement.classList.add("active-link");
+        document.getElementById(tabname).classList.add("active-tab");
+      }
+    </script>
+    <script>
+      var sidemeu = document.getElementById("sidemenu");
+
+      function openmenu() {
+        sidemeu.style.right = "0";
+      }
+
+      function closemenu() {
+        sidemeu.style.right = "-200px";
+      }
+    </script>
+
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyPUSu_YzwOJpEa5E29JK47sYemvo4aZ5najPDn4b14NEWjF-zjkUaAZm0i7caE9Puz/exec";
+      const form = document.forms["submit-to-google-sheet"];
+      const msg = document.getElementById("msg");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            msg.innerHTML = "Message sent successfully";
+            setTimeout(function () {
+              msg.innerHTML = "";
+            }, 5000);
+            form.reset();
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
